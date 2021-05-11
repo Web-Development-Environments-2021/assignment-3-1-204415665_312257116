@@ -1,0 +1,485 @@
+---
+openapi: 3.0.0
+info:
+  title: Simple Inventory API
+  description: This is a simple API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/Daniel-And-Moshe/WebDevelopment2021assignment3204415665_312257116/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: guest
+  description: Not Logged In Users Operations
+- name: user
+  description: Logged In Users Operations
+- name: page
+  description: Access To Pages
+- name: admins
+  description: Secured Admin-only calls
+paths:
+  /guest/register:
+    post:
+      tags:
+      - guest
+      summary: Guest registration operation
+      description: A new user from the client is added to the server
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        "201":
+          description: A new user has beed added
+        "400":
+          description: Wrong input parameters
+  /guest/login:
+    post:
+      tags:
+      - guest
+      summary: Login user operation
+      description: Logs user into the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: Loged in successfully
+        "400":
+          description: Invalid username or password
+  /guest/main:
+    get:
+      tags:
+      - guest
+      summary: Guest's main webpage
+      description: The main page of the Website for not loged user
+      responses:
+        "200":
+          description: The main page uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/guestMainPage'
+        "400":
+          description: Bad request
+  /user/main:
+    get:
+      tags:
+      - user
+      summary: User's main webpage
+      description: The main page of the Website for logged in user
+      responses:
+        "200":
+          description: The main page uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userMainPage'
+        "400":
+          description: Bad request
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Log out user
+      description: Logs out current logged in user session
+      responses:
+        "200":
+          description: The user logged out successfully
+        "400":
+          description: Bad request
+  /user/favoritePlayer:
+    get:
+      tags:
+      - user
+      summary: Return all user's favorite players
+      description: Return all user's favorite players for the "Favorite Players" page
+      responses:
+        "200":
+          description: All favorite players returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/playerPreview'
+        "400":
+          description: Bad request
+    post:
+      tags:
+      - user
+      summary: Add player to favorite
+      description: Add player to the user's "Favorite Players" list
+      requestBody:
+        description: Player's ID that the user want to add to favorite list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+      responses:
+        "200":
+          description: Player added to user's "Favorite Players" list successfully
+        "400":
+          description: Bad request
+  /user/favoriteTeam:
+    get:
+      tags:
+      - user
+      summary: Return all user's favorite teams
+      description: Return all user's favorite teams for the "Favorite Teams" page
+      responses:
+        "200":
+          description: All favorite teams returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/teamInformation'
+        "400":
+          description: Bad request
+    post:
+      tags:
+      - user
+      summary: Add team to favorite
+      description: Add team to the user's "Favorite Teams" list
+      requestBody:
+        description: Team's ID that the user want to add to favorite list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_2'
+      responses:
+        "200":
+          description: Team added to user's "Favorite Teams" list successfully
+        "400":
+          description: Bad request
+  /user/favoriteMatch:
+    get:
+      tags:
+      - user
+      summary: Return all user's favorite matches
+      description: Return all user's favorite matches for the "Favorite Matches" page
+      responses:
+        "200":
+          description: All favorite matches returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/featureMatchInformation'
+        "400":
+          description: Bad request
+    post:
+      tags:
+      - user
+      summary: Add match to favorite
+      description: Add match to the user's "Favorite Matches" list
+      requestBody:
+        description: Match's ID that the user want to add to favorite list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_3'
+      responses:
+        "200":
+          description: Match added to user's "Favorite Matches" list successfully
+        "400":
+          description: Bad request
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        Username:
+          maxLength: 8
+          minLength: 3
+          type: string
+          description: User name  contains betweeb 3 to 9 letters only
+          example: ladygaga
+        firstname:
+          type: string
+          description: User's first name
+          example: Israel
+        lastname:
+          type: string
+          description: User's last name
+          example: Israeli
+        country:
+          type: string
+          description: User's country
+          example: Israel
+        password:
+          maxLength: 10
+          minLength: 5
+          type: string
+          description: -Password contains between 5 to 10 chars, at least one of them is a number and a special char
+          format: password
+          example: Moshe!12
+        confirmationpassword:
+          type: string
+          description: User's password again
+          format: password
+          example: Moshe!12
+        email:
+          type: string
+          description: User's email address
+          format: email
+          example: example@gmail.com
+        image-url:
+          type: string
+          description: Link for user's picture
+          format: url
+          example: https://cloudinary.com/ladygaga
+      description: Model containing user info
+    playerPreview:
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Player's full name
+          example: Israel Israeli
+        teamName:
+          type: string
+          description: The name of player's team
+          example: Beitar Jerusalem
+        image-url:
+          type: string
+          description: URL for the player's image
+          format: URL
+          example: https://cloudinary.com/ladygaga
+        playerposition:
+          type: number
+          description: Player's position in the match
+          example: 1
+      description: Player's preview for webpages
+    playerFullInformation:
+      type: object
+      properties:
+        playerShortInfo:
+          $ref: '#/components/schemas/playerPreview'
+        commonName:
+          type: string
+          description: Player's common name
+          example: I. Israeli
+        nationality:
+          type: string
+          description: Player's nationality
+          example: Israeli
+        birthDate:
+          type: string
+          description: Player's birth date
+          example: 01/01/2020
+        birthCountry:
+          type: string
+          description: Player's birth country
+          example: Israel
+        height:
+          type: string
+          description: Player's height
+          example: 175 cm
+        weight:
+          type: string
+          description: Player's weight
+          example: 84 kg
+      description: Player's full information for personal page
+    coachPreview:
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Coach's full name
+          example: Israel Israeli
+        teamName:
+          type: string
+          description: The name of coach's team
+          example: Beitar Jerusalem
+        image-url:
+          type: string
+          description: URL for the coach's image
+          format: URL
+          example: https://cloudinary.com/ladygaga
+      description: Coach's preview for webpages
+    teamInformation:
+      type: object
+      properties:
+        teamLogo:
+          type: string
+          description: Link for team's logo
+          format: url
+          example: https://cdn.sportmonks.com/images//soccer/teams/11/939.png
+        teamName:
+          type: string
+          description: Team's name
+          example: Beitar Jerusalem
+        teamShortCode:
+          type: string
+          description: Team's short name
+          example: BJ
+        teamSquad:
+          type: array
+          description: Team's players
+          items:
+            $ref: '#/components/schemas/playerPreview'
+        teamCoach:
+          $ref: '#/components/schemas/coachPreview'
+        featureMatches:
+          type: array
+          description: Team's feature matches
+          items:
+            $ref: '#/components/schemas/featureMatchInformation'
+        pastMatches:
+          type: array
+          description: Team's past matches
+          items:
+            $ref: '#/components/schemas/pastMatchInformation'
+      description: Team's preview for webpages
+    featureMatchInformation:
+      type: object
+      properties:
+        matchDate:
+          type: string
+          description: Match's date and time of begining
+          format: date-time
+        loaclTeamName:
+          type: string
+          description: The local team name
+          example: Beitar Jerusalem
+        visitorTeamName:
+          type: string
+          description: The visitor team name
+          example: Hapoel Jerusalem
+        venueName:
+          type: string
+          description: The match stadium name
+          example: Teddy stadium
+      description: The information about feature match
+    pastMatchInformation:
+      type: object
+      properties:
+        matchDateAndTime:
+          type: string
+          description: Match's date and time of begining
+          format: date-time
+        loaclTeamName:
+          type: string
+          description: The local team name
+          example: Beitar Jerusalem
+        visitorTeamName:
+          type: string
+          description: The visitor team name
+          example: Hapoel Jerusalem
+        venueName:
+          type: string
+          description: The match field's name
+          example: Teddy stadium
+        localTeamScore:
+          type: number
+          description: The number of goals scored by the home team
+          example: 5
+        visitorTeamScore:
+          type: number
+          description: The number of goals scored by the home team
+          example: 1
+        eventsLog:
+          type: array
+          description: Match's event log
+          items:
+            $ref: '#/components/schemas/matchEvent'
+      description: The information about past match
+    matchEvent:
+      type: object
+      properties:
+        eventTimeAndDate:
+          type: string
+          description: The date and time the event occurred
+          format: date-time
+        minuteInMatch:
+          type: number
+          description: The minute in match the event occurred
+          example: 10
+        matchEventType:
+          type: string
+          description: Type of the match event
+          example: Goal
+          enum:
+          - Goal
+          - Offside
+          - Red Card
+          - Yellow Card
+          - Injury
+          - Subsitute
+      description: Match Event
+    guestMainPage:
+      type: object
+      properties:
+        leagueName:
+          type: string
+          description: League's name
+          example: Superliga
+        currentSeasonName:
+          type: string
+          description: The current season name
+          example: 2020/2021
+        currentStageName:
+          type: number
+          description: The current stage name
+          example: 1
+        nextMatchDeatails:
+          $ref: '#/components/schemas/featureMatchInformation'
+      description: The information needed for guest main page
+    userMainPage:
+      type: object
+      properties:
+        leftColumn:
+          $ref: '#/components/schemas/guestMainPage'
+        rightColumn:
+          maxLength: 3
+          type: array
+          description: Three feature games from user's favorites
+          items:
+            $ref: '#/components/schemas/featureMatchInformation'
+      description: The information needed for user main page
+    body:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user name for login
+        password:
+          type: string
+          description: The password for login
+      example:
+        username: userName
+        password: passW@rd1
+    body_1:
+      type: object
+      properties:
+        playerID:
+          type: number
+      example:
+        playerID: 172104
+    body_2:
+      type: object
+      properties:
+        teamID:
+          type: number
+      example:
+        playerID: 939
+    body_3:
+      type: object
+      properties:
+        matchID:
+          type: number
+      example:
+        playerID: 16475287
